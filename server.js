@@ -45,6 +45,11 @@ async function initDatabase() {
     }
 }
 
+// Automatically load doctors-details.html when visiting the main root URL
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'doctors-details.html'));
+});
+
 // 2. Fetch all doctors from Database
 app.get('/api/doctors', async (req, res) => {
     try {
