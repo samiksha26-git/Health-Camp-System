@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampCare Pro | Patient Records</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <!-- SheetJS Library for Exporting to Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- jsPDF Library for Downloading Individual PDFs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="bg-slate-50 font-[Poppins] min-h-screen flex">
+
+    <!-- Sidebar Menu -->
+    <aside class="w-64 bg-slate-800 text-slate-300 flex flex-col fixed h-full border-r border-slate-700">
+        <div class="p-5 border-b border-slate-700 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center text-slate-900 font-bold">
+                <i class="fa-solid fa-user-doctor"></i>
+            </div>
+            <span class="font-bold text-white tracking-wide">CampCare Pro</span>
+        </div>
+        
+        <nav class="flex-1 p-4 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-700/50 hover:text-white rounded-lg transition text-slate-400">
+                <i class="fa-solid fa-chart-pie w-5"></i> Dashboard
+            </a>
+            <a href="doctors-details.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-700/50 hover:text-white rounded-lg transition text-slate-400">
+                <i class="fa-solid fa-user-md w-5"></i> Doctors Details
+            </a>
+            <a href="add-patient.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-700/50 hover:text-white rounded-lg transition text-slate-400">
+                <i class="fa-solid fa-user-plus w-5"></i> Add Patient
+            </a>
+            <a href="patient-records.html" class="flex items-center gap-3 px-4 py-2.5 bg-slate-700 text-white rounded-lg transition font-medium">
+                <i class="fa-solid fa-folder-open w-5"></i> Patient Records
+            </a>
+            <a href="medicine.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-700/50 hover:text-white rounded-lg transition text-slate-400">
+                <i class="fa-solid fa-pills w-5"></i> Medicine Stock
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-slate-700">
+            <a href="login.html" class="flex items-center gap-3 px-4 py-2.5 text-xs text-rose-400 hover:bg-rose-500/10 rounded-lg transition font-medium">
+                <i class="fa-solid fa-right-from-bracket"></i> Log Out
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="ml-64 flex-1 p-8">
+        <header class="flex justify-between items-center mb-8 bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+            <div>
+                <h1 class="text-xl font-bold text-gray-800">Patient Records List</h1>
+                <p class="text-xs text-gray-500 mt-0.5">Manage patient history, export excel sheet & download PDFs</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <!-- Excel Download Button -->
+                <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 shadow-sm cursor-pointer">
+                    <i class="fa-solid fa-file-excel text-sm"></i> Export to Excel
+                </button>
+                <a href="add-patient.html" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 shadow-sm">
+                    <i class="fa-solid fa-plus"></i> Add New Patient
+                </a>
+            </div>
+        </header>
+
+        <!-- Search Box -->
+        <div class="mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <div class="relative">
+                <input type="text" id="searchPatient" onkeyup="filterPatients()" placeholder="Search patient by name or phone..." class="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-2 text-sm outline-none focus:ring-2 focus:ring-teal-500">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gray-400 text-sm"></i>
+            </div>
+        </div>
+
+        <!-- Patient Records Table -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse" id="patientTable">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-600 uppercase text-[11px] font-bold tracking-wider border-b border-gray-200">
+                            <th class="p-4">Patient ID</th>
+                            <th class="p-4">Patient Name</th>
+                            <th class="p-4">Age / Gender</th>
+                            <th class="p-4">Vitals (BP/Sugar/Ht/Wt)</th>
+                            <th class="p-4">Phone</th>
+                            <th class="p-4">Diagnosis</th>
+                            <th class="p-4">Date</th>
+                            <th class="p-4 text-center">PDF Link</th>
+                        </tr>
+                    </thead>
+                    <tbody id="patientTableBody" class="divide-y divide-gray-100 text-sm text-gray-700">
+                        <!-- Dynamic Records Rendered Here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', loadPatientRecords);
+
+        function loadPatientRecords() {
+            const records = JSON.parse(localStorage.getItem('patient_records') || '[]');
+            renderTable(records);
+        }
+
+        function renderTable(records) {
+            const tableBody = document.getElementById('patientTableBody');
+
+            if (records.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center p-8 text-gray-400 text-sm">
+                            <i class="fa-solid fa-folder-open text-2xl mb-2 block"></i>
+                            No patient records found. Add a new patient entry!
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = records.map((patient, index) => `
+                <tr class="hover:bg-slate-50/80 transition">
+                    <td class="p-4 font-semibold text-teal-700 text-xs">${patient.id}</td>
+                    <td class="p-4 font-bold text-gray-800">${patient.name}</td>
+                    <td class="p-4">${patient.age} yrs / ${patient.gender}</td>
+                    <td class="p-4 text-xs space-y-0.5">
+                        <div><strong>BP:</strong> ${patient.bloodPressure || 'N/A'}</div>
+                        <div><strong>Sugar:</strong> ${patient.bloodSugar || 'N/A'} mg/dL</div>
+                        <div><strong>Ht/Wt:</strong> ${patient.height || 'N/A'}cm / ${patient.weight || 'N/A'}kg</div>
+                    </td>
+                    <td class="p-4">${patient.phone}</td>
+                    <td class="p-4 text-xs text-gray-600 max-w-xs truncate">${patient.diagnosis}</td>
+                    <td class="p-4 text-xs text-gray-400">${patient.date}</td>
+                    <td class="p-4 text-center">
+                        <button onclick="downloadPDFLink(${index})" class="text-xs bg-teal-50 text-teal-700 hover:bg-teal-100 border border-teal-200 px-3 py-1.5 rounded-lg font-medium transition inline-flex items-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-file-pdf text-rose-500"></i> PDF Link
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Filter / Search function
+        function filterPatients() {
+            const query = document.getElementById('searchPatient').value.toLowerCase();
+            const records = JSON.parse(localStorage.getItem('patient_records') || '[]');
+            const filtered = records.filter(p => 
+                p.name.toLowerCase().includes(query) || p.phone.includes(query) || p.id.toLowerCase().includes(query)
+            );
+            renderTable(filtered);
+        }
+
+        // --- Export Entire Patient List to Excel (.xlsx) ---
+        function exportToExcel() {
+            const records = JSON.parse(localStorage.getItem('patient_records') || '[]');
+            
+            if (records.length === 0) {
+                alert("No patient records available to export!");
+                return;
+            }
+
+            // Format data cleanly for Excel columns
+            const excelData = records.map(p => ({
+                "Patient ID": p.id,
+                "Full Name": p.name,
+                "Age": p.age,
+                "Gender": p.gender,
+                "Blood Group": p.bloodGroup,
+                "Blood Pressure": p.bloodPressure,
+                "Blood Sugar": p.bloodSugar,
+                "Height (cm)": p.height,
+                "Weight (kg)": p.weight,
+                "Contact Number": p.phone,
+                "Diagnosis": p.diagnosis,
+                "Prescription Count": p.prescriptions ? p.prescriptions.length : 0,
+                "Registration Date": p.date
+            }));
+
+            // Create Excel Sheet
+            const worksheet = XLSX.utils.json_to_sheet(excelData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Patient Records");
+
+            // Download file directly
+            XLSX.writeFile(workbook, `Patient_Records_${new Date().toISOString().slice(0,10)}.xlsx`);
+        }
+
+        // --- Generate & Download Individual PDF on Link Click ---
+        function downloadPDFLink(index) {
+            const records = JSON.parse(localStorage.getItem('patient_records') || '[]');
+            const patient = records[index];
+
+            if(!patient) return;
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Header Banner
+            doc.setFillColor(13, 148, 136);
+            doc.rect(0, 0, 210, 28, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(18);
+            doc.text("CampCare Pro - Medical Slip & Prescription", 15, 18);
+
+            // Patient Metadata
+            doc.setTextColor(40, 40, 40);
+            doc.setFontSize(10);
+            doc.text(`Patient ID: ${patient.id}`, 15, 38);
+            doc.text(`Date: ${patient.date}`, 150, 38);
+
+            doc.setLineWidth(0.4);
+            doc.line(15, 42, 195, 42);
+
+            // Patient Vitals Section in PDF
+            doc.setFontSize(10);
+            doc.text(`Name: ${patient.name}`, 15, 50);
+            doc.text(`Age/Gender: ${patient.age} Yrs / ${patient.gender}`, 15, 58);
+            doc.text(`Contact: ${patient.phone}`, 15, 66);
+            doc.text(`Blood Group: ${patient.bloodGroup || 'N/A'}`, 15, 74);
+
+            doc.text(`Blood Pressure: ${patient.bloodPressure || 'N/A'} mmHg`, 110, 50);
+            doc.text(`Blood Sugar: ${patient.bloodSugar || 'N/A'} mg/dL`, 110, 58);
+            doc.text(`Height: ${patient.height || 'N/A'} cm`, 110, 66);
+            doc.text(`Weight: ${patient.weight || 'N/A'} kg`, 110, 74);
+
+            doc.line(15, 80, 195, 80);
+
+            // Diagnosis
+            doc.setFontSize(11);
+            doc.text("Diagnosis / Symptoms:", 15, 88);
+            doc.setFontSize(9);
+            const splitDiagnosis = doc.splitTextToSize(patient.diagnosis || 'N/A', 175);
+            doc.text(splitDiagnosis, 15, 95);
+
+            let currentY = 108;
+            doc.line(15, currentY, 195, currentY);
+
+            // Prescriptions Section
+            if(patient.prescriptions && patient.prescriptions.length > 0) {
+                currentY += 8;
+                doc.setFontSize(12);
+                doc.text("Prescribed Medicines (Rx):", 15, currentY);
+
+                currentY += 6;
+                doc.setFillColor(241, 245, 249);
+                doc.rect(15, currentY, 180, 8, 'F');
+                doc.setFontSize(9);
+                doc.text("Medicine Name", 18, currentY + 5.5);
+                doc.text("Dosage", 80, currentY + 5.5);
+                doc.text("Frequency", 115, currentY + 5.5);
+                doc.text("Instruction", 160, currentY + 5.5);
+
+                currentY += 8;
+
+                patient.prescriptions.forEach((med, idx) => {
+                    currentY += 7;
+                    doc.setFontSize(9);
+                    doc.text(`${idx + 1}. ${med.name}`, 18, currentY);
+                    doc.text(med.dosage, 80, currentY);
+                    doc.text(med.frequency, 115, currentY);
+                    doc.text(med.instruction, 160, currentY);
+                });
+            }
+
+            // Footer
+            doc.setFontSize(8);
+            doc.setTextColor(120, 120, 120);
+            doc.text("Generated by CampCare Pro Digital Healthcare System", 15, 280);
+
+            // Download PDF File
+            doc.save(`${patient.name.replace(/\s+/g, '_')}_Prescription.pdf`);
+        }
+    </script>
+</body>
+</html>

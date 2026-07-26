@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampCare Pro | Metrics Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-100 font-[Poppins]">
+
+    <!-- Global Navigation -->
+    <nav class="bg-white shadow-md px-8 py-4 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <span class="text-teal-600 text-2xl"><i class="fa-solid fa-hospital-user"></i></span>
+            <span class="text-xl font-bold text-gray-800">CampCare Pro</span>
+        </div>
+        <div class="flex gap-6 font-medium text-gray-600">
+            <a href="dashboard.html" class="hover:text-teal-600 transition">Dashboard</a>
+            <a href="patient-records.html" class="hover:text-teal-600 transition">Patients</a>
+            <a href="analytics.html" class="text-teal-600 border-b-2 border-teal-600 pb-1">Analytics</a>
+            <a href="pharmacy.html" class="hover:text-teal-600 transition">Pharmacy</a>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="text-sm text-gray-700 font-medium"> </span>
+            <a href="login.html" class="text-red-500 hover:text-red-700 text-sm"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </nav>
+
+    <main class="p-8 space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Disease Distribution Canvas -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+                <div class="border-b border-gray-100 pb-4 mb-4 flex items-center justify-between">
+                    <h2 class="text-md font-bold text-gray-800 flex items-center gap-2">📊 Disease Spread Vectors</h2>
+                </div>
+                <div class="relative max-h-[300px] flex justify-center">
+                    <canvas id="diseaseChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Throughput Velocity Vector -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+                <div class="border-b border-gray-100 pb-4 mb-4 flex items-center justify-between">
+                    <h2 class="text-md font-bold text-gray-800 flex items-center gap-2">📈 Weekly Admission Footfall</h2>
+                </div>
+                <div class="relative max-h-[300px] flex justify-center">
+                    <canvas id="weeklyChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demographics Engine Area -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+            <div class="border-b border-gray-100 pb-4 mb-6">
+                <h2 class="text-md font-bold text-gray-800 flex items-center gap-2">👨‍👩‍👧 Demographics Metrics</h2>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-1 grid grid-cols-2 gap-4">
+                    <div class="bg-blue-50/70 border border-blue-100 rounded-xl p-4">
+                        <h4 class="text-blue-800 text-xs font-semibold uppercase">Male Cohort</h4>
+                        <p class="text-2xl font-bold text-blue-900 mt-2">128</p>
+                    </div>
+                    <div class="bg-pink-50/70 border border-pink-100 rounded-xl p-4">
+                        <h4 class="text-pink-800 text-xs font-semibold uppercase">Female Cohort</h4>
+                        <p class="text-2xl font-bold text-pink-900 mt-2">174</p>
+                    </div>
+                    <div class="bg-yellow-50/70 border border-yellow-100 rounded-xl p-4">
+                        <h4 class="text-yellow-800 text-xs font-semibold uppercase">Pediatric Class</h4>
+                        <p class="text-2xl font-bold text-yellow-900 mt-2">42</p>
+                    </div>
+                    <div class="bg-green-50/70 border border-green-100 rounded-xl p-4">
+                        <h4 class="text-green-800 text-xs font-semibold uppercase">Geriatric Class</h4>
+                        <p class="text-2xl font-bold text-green-900 mt-2">31</p>
+                    </div>
+                </div>
+                <div class="lg:col-span-2 relative max-h-[250px] flex justify-center">
+                    <canvas id="genderChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampCare Pro | Add Patient</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- jsPDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="bg-slate-50 font-[Poppins] min-h-screen flex">
+
+    <!-- Sidebar Menu -->
+    <aside class="w-64 bg-slate-800 text-slate-300 flex flex-col fixed h-full border-r border-slate-700">
+        <div class="p-5 border-b border-slate-700 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center text-slate-900 font-bold">
+                <i class="fa-solid fa-user-doctor"></i>
+            </div>
+            <span class="font-bold text-white tracking-wide">CampCare Pro</span>
+        </div>
+        
+        <nav class="flex-1 p-4 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-700/50 hover:text-white rounded-lg transition text-slate-400">
+                <i class="fa-solid fa-chart-pie w-5"></i> Dashboard
+            </a>
+            <a href="doctors-details.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-700/50 hover:text-white rounded-lg transition text-slate-400">
+                <i class="fa-solid fa-user-md w-5"></i> Doctors Details
+            </a>
+            <a href="add-patient.html" class="flex items-center gap-3 px-4 py-2.5 bg-slate-700 text-white rounded-lg transition font-medium">
+                <i class="fa-solid fa-user-plus w-5"></i> Add Patient
+            </a>
+            <a href="patient-records.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-700/50 hover:text-white rounded-lg transition text-slate-400">
+                <i class="fa-solid fa-folder-open w-5"></i> Patient Records
+            </a>
+            <a href="medicine.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-700/50 hover:text-white rounded-lg transition text-slate-400">
+                <i class="fa-solid fa-pills w-5"></i> Medicine Stock
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-slate-700">
+            <a href="login.html" class="flex items-center gap-3 px-4 py-2.5 text-xs text-rose-400 hover:bg-rose-500/10 rounded-lg transition font-medium">
+                <i class="fa-solid fa-right-from-bracket"></i> Log Out
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="ml-64 flex-1 p-8">
+        <header class="flex justify-between items-center mb-8 bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+            <div>
+                <h1 class="text-xl font-bold text-gray-800">Add New Patient Entry</h1>
+                <p class="text-xs text-gray-500 mt-0.5">Enter patient medical details, prescriptions & generate report PDF</p>
+            </div>
+        </header>
+
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 max-w-4xl">
+            <form onsubmit="handleSavePatient(event)" class="space-y-6">
+                
+                <!-- Section 1: Patient Personal Information -->
+                <h3 class="text-sm font-bold text-teal-700 border-b pb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-user"></i> Patient Information
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div>
+                        <label for="patientName" class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Full Name</label>
+                        <input type="text" id="patientName" required placeholder="e.g. Ramesh Patil" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-teal-500">
+                    </div>
+                    <div>
+                        <label for="patientAge" class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Age</label>
+                        <input type="number" id="patientAge" required placeholder="e.g. 45" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-teal-500">
+                    </div>
+                    <div>
+                        <label for="patientGender" class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Gender</label>
+                        <select id="patientGender" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-teal-500 bg-white">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Section 2: Vitals & Health Info -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div>
+                        <label for="patientBloodGroup" class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Blood Group</label>
+                        <select id="patientBloodGroup" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-teal-500 bg-white">
+                            <option value="">Select</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="patientBloodPressure" class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Blood Pressure (mmHg)</label>
+                        <input type="text" id="patientBloodPressure" placeholder="e.g. 120/80" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-teal-500">
+                    </div>
+                    <div>
+                        <label for="patientBloodSugar" class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Blood Sugar (mg/dL)</label>
+                        <input type="text" id="patientBloodSugar" placeholder="e.g. 110" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-teal-500">
+                    </div>
+                    <div>
+                        <label for="patientHeight" class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Height (cm)</label>
+                        <input type="number" id="patientHeight" placeholder="e.g. 170" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-teal-500">
+                    </div>
+                    <div>
+                        <label for="patientWeight" class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Weight (kg)</label>
+                        <input type="number" id="patientWeight" placeholder="e.g. 68" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-teal-500">
+                    </div>
+                    <div>
+                        <label for="patientPhone" class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Contact Number</label>
+                        <input type="tel" id="patientPhone" required placeholder="e.g. 9876543210" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-teal-500">
+                    </div>
+                </div>
+
+                <!-- Section 3: Diagnosis -->
+                <div>
+                    <label for="patientDiagnosis" class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Diagnosis / Symptoms</label>
+                    <textarea id="patientDiagnosis" rows="2" required placeholder="Describe symptoms or medical diagnosis..." class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                </div>
+
+                <!-- Section 4: Dynamic Prescription Details -->
+                <div class="pt-2">
+                    <div class="flex justify-between items-center border-b pb-2 mb-3">
+                        <h3 class="text-sm font-bold text-teal-700 flex items-center gap-2">
+                            <i class="fa-solid fa-prescription"></i> Prescription Details
+                        </h3>
+                        <button type="button" onclick="addMedicineRow()" class="text-xs bg-teal-50 text-teal-700 hover:bg-teal-100 border border-teal-200 px-3 py-1.5 rounded-lg font-semibold transition flex items-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-plus"></i> Add Another Medicine
+                        </button>
+                    </div>
+
+                    <div id="medicineContainer" class="space-y-3">
+                        <!-- Initial Medicine Row -->
+                        <div class="medicine-row grid grid-cols-12 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 items-end">
+                            <div class="col-span-12 md:col-span-4">
+                                <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-1">Medicine Name</label>
+                                <input type="text" class="med-name w-full border border-gray-300 rounded-lg px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-teal-500 bg-white" placeholder="e.g. Paracetamol 500mg" required>
+                            </div>
+                            <div class="col-span-6 md:col-span-2">
+                                <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-1">Dosage</label>
+                                <input type="text" class="med-dosage w-full border border-gray-300 rounded-lg px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-teal-500 bg-white" placeholder="e.g. 1 Tablet / 5ml" required>
+                            </div>
+                            <div class="col-span-6 md:col-span-3">
+                                <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-1">Frequency</label>
+                                <select class="med-frequency w-full border border-gray-300 rounded-lg px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-teal-500 bg-white" required>
+                                    <option value="1-0-1 (Morning & Night)">1-0-1 (Morning & Night)</option>
+                                    <option value="1-1-1 (Morning, Noon, Night)">1-1-1 (Morning, Noon, Night)</option>
+                                    <option value="1-0-0 (Morning Only)">1-0-0 (Morning Only)</option>
+                                    <option value="0-0-1 (Night Only)">0-0-1 (Night Only)</option>
+                                    <option value="As Needed (SOS)">As Needed (SOS)</option>
+                                </select>
+                            </div>
+                            <div class="col-span-10 md:col-span-2">
+                                <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-1">Instruction</label>
+                                <select class="med-instruction w-full border border-gray-300 rounded-lg px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-teal-500 bg-white">
+                                    <option value="After Food">After Food</option>
+                                    <option value="Before Food">Before Food</option>
+                                    <option value="With Water">With Water</option>
+                                </select>
+                            </div>
+                            <div class="col-span-2 md:col-span-1 text-right">
+                                <button type="button" onclick="removeMedicineRow(this)" class="w-full bg-rose-100 text-rose-600 hover:bg-rose-200 p-2 rounded-lg transition text-xs flex items-center justify-center">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
+                    <button type="reset" class="px-5 py-2.5 rounded-lg border border-gray-300 text-gray-600 font-semibold text-xs hover:bg-gray-50 transition">Reset</button>
+                    <button type="submit" class="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-semibold text-xs transition shadow-md flex items-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-file-pdf"></i> Save & Download PDF
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        function addMedicineRow() {
+            const container = document.getElementById('medicineContainer');
+            const row = document.createElement('div');
+            row.className = "medicine-row grid grid-cols-12 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 items-end";
+            row.innerHTML = `
+                <div class="col-span-12 md:col-span-4">
+                    <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-1">Medicine Name</label>
+                    <input type="text" class="med-name w-full border border-gray-300 rounded-lg px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-teal-500 bg-white" placeholder="e.g. Amoxicillin 500mg" required>
+                </div>
+                <div class="col-span-6 md:col-span-2">
+                    <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-1">Dosage</label>
+                    <input type="text" class="med-dosage w-full border border-gray-300 rounded-lg px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-teal-500 bg-white" placeholder="e.g. 1 Cap" required>
+                </div>
+                <div class="col-span-6 md:col-span-3">
+                    <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-1">Frequency</label>
+                    <select class="med-frequency w-full border border-gray-300 rounded-lg px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-teal-500 bg-white" required>
+                        <option value="1-0-1 (Morning & Night)">1-0-1 (Morning & Night)</option>
+                        <option value="1-1-1 (Morning, Noon, Night)">1-1-1 (Morning, Noon, Night)</option>
+                        <option value="1-0-0 (Morning Only)">1-0-0 (Morning Only)</option>
+                        <option value="0-0-1 (Night Only)">0-0-1 (Night Only)</option>
+                        <option value="As Needed (SOS)">As Needed (SOS)</option>
+                    </select>
+                </div>
+                <div class="col-span-10 md:col-span-2">
+                    <label class="block text-[11px] font-semibold text-gray-600 uppercase mb-1">Instruction</label>
+                    <select class="med-instruction w-full border border-gray-300 rounded-lg px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-teal-500 bg-white">
+                        <option value="After Food">After Food</option>
+                        <option value="Before Food">Before Food</option>
+                        <option value="With Water">With Water</option>
+                    </select>
+                </div>
+                <div class="col-span-2 md:col-span-1 text-right">
+                    <button type="button" onclick="removeMedicineRow(this)" class="w-full bg-rose-100 text-rose-600 hover:bg-rose-200 p-2 rounded-lg transition text-xs flex items-center justify-center">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            `;
+            container.appendChild(row);
+        }
+
+        function removeMedicineRow(button) {
+            const rows = document.querySelectorAll('.medicine-row');
+            if (rows.length > 1) {
+                button.closest('.medicine-row').remove();
+            } else {
+                alert("At least one medicine entry is required.");
+            }
+        }
+
+        function handleSavePatient(e) {
+            e.preventDefault();
+
+            // Collect Patient Vitals including BP and Height
+            const name = document.getElementById('patientName').value.trim();
+            const age = document.getElementById('patientAge').value.trim();
+            const gender = document.getElementById('patientGender').value;
+            const bloodGroup = document.getElementById('patientBloodGroup').value;
+            const bloodPressure = document.getElementById('patientBloodPressure').value.trim() || 'N/A';
+            const bloodSugar = document.getElementById('patientBloodSugar').value.trim() || 'N/A';
+            const height = document.getElementById('patientHeight').value.trim() || 'N/A';
+            const weight = document.getElementById('patientWeight').value.trim() || 'N/A';
+            const phone = document.getElementById('patientPhone').value.trim();
+            const diagnosis = document.getElementById('patientDiagnosis').value.trim();
+            const patientId = 'PT-' + Math.floor(1000 + Math.random() * 9000);
+            const currentDate = new Date().toLocaleDateString('en-GB');
+
+            // Collect Prescriptions
+            const medicineRows = document.querySelectorAll('.medicine-row');
+            let prescriptions = [];
+
+            medicineRows.forEach(row => {
+                prescriptions.push({
+                    name: row.querySelector('.med-name').value.trim(),
+                    dosage: row.querySelector('.med-dosage').value.trim(),
+                    frequency: row.querySelector('.med-frequency').value,
+                    instruction: row.querySelector('.med-instruction').value
+                });
+            });
+
+            // Save Record Data
+            const newPatient = {
+                id: patientId,
+                name: name,
+                age: age,
+                gender: gender,
+                bloodGroup: bloodGroup,
+                bloodPressure: bloodPressure,
+                bloodSugar: bloodSugar,
+                height: height,
+                weight: weight,
+                phone: phone,
+                diagnosis: diagnosis,
+                prescriptions: prescriptions,
+                date: currentDate
+            };
+
+            let patientRecords = JSON.parse(localStorage.getItem('patient_records') || '[]');
+            patientRecords.push(newPatient);
+            localStorage.setItem('patient_records', JSON.stringify(patientRecords));
+
+            // Generate PDF Report with BP and Height
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Header Banner
+            doc.setFillColor(13, 148, 136);
+            doc.rect(0, 0, 210, 28, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(18);
+            doc.text("CampCare Pro - Medical Slip & Prescription", 15, 18);
+
+            // Patient Metadata
+            doc.setTextColor(40, 40, 40);
+            doc.setFontSize(10);
+            doc.text(`Patient ID: ${patientId}`, 15, 38);
+            doc.text(`Date: ${currentDate}`, 150, 38);
+
+            doc.setLineWidth(0.4);
+            doc.line(15, 42, 195, 42);
+
+            // Patient Vitals Section in PDF
+            doc.setFontSize(10);
+            doc.text(`Name: ${name}`, 15, 50);
+            doc.text(`Age/Gender: ${age} Yrs / ${gender}`, 15, 58);
+            doc.text(`Contact: ${phone}`, 15, 66);
+            doc.text(`Blood Group: ${bloodGroup}`, 15, 74);
+
+            doc.text(`Blood Pressure: ${bloodPressure} mmHg`, 110, 50);
+            doc.text(`Blood Sugar: ${bloodSugar} mg/dL`, 110, 58);
+            doc.text(`Height: ${height} cm`, 110, 66);
+            doc.text(`Weight: ${weight} kg`, 110, 74);
+
+            doc.line(15, 80, 195, 80);
+
+            // Diagnosis
+            doc.setFontSize(11);
+            doc.text("Diagnosis / Symptoms:", 15, 88);
+            doc.setFontSize(9);
+            const splitDiagnosis = doc.splitTextToSize(diagnosis, 175);
+            doc.text(splitDiagnosis, 15, 95);
+
+            let currentY = 108;
+            doc.line(15, currentY, 195, currentY);
+
+            // Prescriptions Section
+            currentY += 8;
+            doc.setFontSize(12);
+            doc.text("Prescribed Medicines (Rx):", 15, currentY);
+
+            currentY += 6;
+            doc.setFillColor(241, 245, 249);
+            doc.rect(15, currentY, 180, 8, 'F');
+            doc.setFontSize(9);
+            doc.text("Medicine Name", 18, currentY + 5.5);
+            doc.text("Dosage", 80, currentY + 5.5);
+            doc.text("Frequency", 115, currentY + 5.5);
+            doc.text("Instruction", 160, currentY + 5.5);
+
+            currentY += 8;
+
+            prescriptions.forEach((med, idx) => {
+                currentY += 7;
+                doc.setFontSize(9);
+                doc.text(`${idx + 1}. ${med.name}`, 18, currentY);
+                doc.text(med.dosage, 80, currentY);
+                doc.text(med.frequency, 115, currentY);
+                doc.text(med.instruction, 160, currentY);
+            });
+
+            // Footer
+            doc.setFontSize(8);
+            doc.setTextColor(120, 120, 120);
+            doc.text("Generated by CampCare Pro Digital Healthcare System", 15, 280);
+
+            // Save File
+            doc.save(`${name.replace(/\s+/g, '_')}_Prescription.pdf`);
+
+            alert("Patient record & prescription saved successfully!");
+            window.location.href = "patient-records.html";
+        }
+    </script>
+</body>
+</html>

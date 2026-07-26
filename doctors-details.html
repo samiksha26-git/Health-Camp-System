@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampCare Pro | Doctor Details</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-slate-50 font-[Poppins] min-h-screen flex">
+
+    <!-- Sidebar Menu -->
+    <aside class="w-64 bg-slate-800 text-slate-300 flex flex-col fixed h-full border-r border-slate-700">
+        <div class="p-5 border-b border-slate-700 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center text-slate-900 font-bold">
+                <i class="fa-solid fa-user-doctor"></i>
+            </div>
+            <span class="font-bold text-white tracking-wide">CampCare Pro</span>
+        </div>
+        
+        <nav class="flex-1 p-4 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-700/50 hover:text-white rounded-lg transition text-slate-400">
+                <i class="fa-solid fa-chart-pie w-5"></i> Dashboard & Analytics
+            </a>
+            <a href="doctors-details.html" class="flex items-center gap-3 px-4 py-2.5 bg-slate-700 text-white rounded-lg transition font-medium">
+                <i class="fa-solid fa-user-md w-5"></i> Doctors Details
+            </a>
+            <a href="add-patient.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-700/50 hover:text-white rounded-lg transition text-slate-400">
+                <i class="fa-solid fa-user-plus w-5"></i> Add Patient
+            </a>
+            <a href="patient-records.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-700/50 hover:text-white rounded-lg transition text-slate-400">
+                <i class="fa-solid fa-folder-open w-5"></i> Patient Records
+            </a>
+            <a href="medicine.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-700/50 hover:text-white rounded-lg transition text-slate-400">
+                <i class="fa-solid fa-pills w-5"></i> Medicine Stock
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-slate-700">
+            <a href="login.html" onclick="handleLogout()" class="flex items-center gap-3 px-4 py-2.5 text-xs text-rose-400 hover:bg-rose-500/10 rounded-lg transition font-medium">
+                <i class="fa-solid fa-right-from-bracket"></i> Log Out
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="ml-64 flex-1 p-8">
+        <header class="flex justify-between items-center mb-8 bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+            <div>
+                <h1 class="text-xl font-bold text-gray-800">Doctors Directory & Active Profile</h1>
+                <p class="text-xs text-gray-500 mt-0.5">Currently logged-in doctor profile and camp doctors list</p>
+            </div>
+            <a href="login.html" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-xs font-semibold transition flex items-center gap-2">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i> Switch Doctor / Login
+            </a>
+        </header>
+
+        <!-- Logged-In Doctor Active Profile Card -->
+        <div id="activeDoctorCard" class="bg-gradient-to-r from-teal-600 to-teal-800 rounded-3xl p-6 text-white shadow-lg mb-8 relative overflow-hidden">
+            <!-- Background Icon -->
+            <i class="fa-solid fa-user-doctor absolute -right-6 -bottom-6 text-9xl text-white/10"></i>
+
+            <div class="flex items-center gap-2 text-teal-200 text-xs font-semibold uppercase tracking-widest mb-3">
+                <span class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-ping"></span> Currently Logged In Doctor Profile
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+                <div>
+                    <span class="text-xs text-teal-200 block">Doctor Name</span>
+                    <h2 class="text-2xl font-bold" id="activeDocName">Dr. Sam Patel</h2>
+                    <p class="text-xs text-teal-100 mt-0.5" id="activeDocDegree">MBBS, MD (General Medicine)</p>
+                </div>
+
+                <div class="space-y-1 text-xs">
+                    <div><strong class="text-teal-200">Doctor ID:</strong> <span id="activeDocId" class="font-semibold">DOC-102</span></div>
+                    <div><strong class="text-teal-200">Registration No:</strong> <span id="activeDocReg" class="font-semibold">MMC-89012</span></div>
+                </div>
+
+                <div class="space-y-1 text-xs">
+                    <div><strong class="text-teal-200">Assigned Cabin:</strong> <span id="activeDocCabin" class="bg-white/20 px-2 py-0.5 rounded font-bold text-white">Cabin 02</span></div>
+                    <div><strong class="text-teal-200">Mobile Number:</strong> <span id="activeDocPhone" class="font-semibold">9876543210</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Doctors List Table -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-5 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="font-bold text-gray-800 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-teal-600"></i> All Doctors List
+                </h3>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-600 uppercase text-[11px] font-bold tracking-wider border-b border-gray-200">
+                            <th class="p-4">Doctor ID</th>
+                            <th class="p-4">Doctor Name</th>
+                            <th class="p-4">Qualification / Degree</th>
+                            <th class="p-4">Reg. Number</th>
+                            <th class="p-4">Mobile No.</th>
+                            <th class="p-4">Cabin No.</th>
+                            <th class="p-4">Status</th>
+                            <th class="p-4 text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="doctorsTableBody" class="divide-y divide-gray-100 text-sm text-gray-700">
+                        <!-- Dynamic Doctors List Rendered Here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', loadDoctorDetailsPage);
+
+        function loadDoctorDetailsPage() {
+            // Retrieve session data saved during login
+            const sessionDocId = localStorage.getItem('doctor_id') || 'DOC-102';
+            const sessionDocName = localStorage.getItem('doctor_name') || 'Dr. Sam Patel';
+            const sessionDocReg = localStorage.getItem('doctor_reg_no') || 'MMC-89012';
+
+            // Active Doctor Object
+            const activeDoc = {
+                id: sessionDocId,
+                name: sessionDocName,
+                degree: 'MBBS, MD (General Medicine)',
+                regNo: sessionDocReg,
+                cabin: 'Cabin 02',
+                phone: '9876543210',
+                status: 'Active'
+            };
+
+            // Set Active Profile Card values
+            document.getElementById('activeDocName').innerText = activeDoc.name;
+            document.getElementById('activeDocDegree').innerText = activeDoc.degree;
+            document.getElementById('activeDocId').innerText = activeDoc.id;
+            document.getElementById('activeDocReg').innerText = activeDoc.regNo;
+            document.getElementById('activeDocCabin').innerText = activeDoc.cabin;
+            document.getElementById('activeDocPhone').innerText = activeDoc.phone;
+
+            // Sync with Registered Users Database from Login/Register Page
+            let registeredUsers = JSON.parse(localStorage.getItem('registered_users') || '{}');
+            let doctorsList = JSON.parse(localStorage.getItem('doctors_details') || '[]');
+
+            // If empty, initialize doctors list with current session & default doctors
+            if (doctorsList.length === 0) {
+                doctorsList = [
+                    activeDoc,
+                    { id: 'DOC-102', name: 'Dr. Rahul Sharma', degree: 'MBBS, MS (Orthopedics)', regNo: 'MMC-45678', phone: '9822110033', cabin: 'Cabin 01', status: 'Active' },
+                    { id: 'DOC-103', name: 'Dr. Anjali Deshmukh', degree: 'BAMS, MD', regNo: 'MMC-78901', phone: '9766554433', cabin: 'Cabin 03', status: 'Active' }
+                ];
+
+                // Include any registered users from LocalStorage
+                Object.keys(registeredUsers).forEach(id => {
+                    if (!doctorsList.some(d => d.id === id)) {
+                        doctorsList.push({
+                            id: registeredUsers[id].docId,
+                            name: registeredUsers[id].fullName,
+                            degree: 'MBBS, MD',
+                            regNo: registeredUsers[id].regNo,
+                            phone: '9876543210',
+                            cabin: 'Cabin 04',
+                            status: 'Active'
+                        });
+                    }
+                });
+
+                localStorage.setItem('doctors_details', JSON.stringify(doctorsList));
+            }
+
+            renderDoctorsTable(doctorsList, activeDoc.id);
+        }
+
+        function renderDoctorsTable(doctors, activeDocId) {
+            const tableBody = document.getElementById('doctorsTableBody');
+
+            if (doctors.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="p-6 text-center text-gray-400 text-xs">
+                            No doctors registered in the system.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = doctors.map(doc => {
+                const isActive = doc.id.toLowerCase() === activeDocId.toLowerCase();
+                return `
+                    <tr class="${isActive ? 'bg-teal-50/60 font-medium' : 'hover:bg-slate-50'} transition">
+                        <td class="p-4 text-xs font-bold text-teal-700">${doc.id}</td>
+                        <td class="p-4 font-bold text-gray-800 flex items-center gap-2">
+                            ${doc.name}
+                            ${isActive ? '<span class="text-[10px] bg-teal-600 text-white px-2 py-0.5 rounded-full font-normal">Logged In</span>' : ''}
+                        </td>
+                        <td class="p-4 text-xs">${doc.degree || 'MBBS, MD'}</td>
+                        <td class="p-4 text-xs text-gray-500">${doc.regNo}</td>
+                        <td class="p-4 text-xs">${doc.phone || '9876543210'}</td>
+                        <td class="p-4"><span class="bg-slate-200 text-slate-800 text-xs px-2.5 py-1 rounded-lg font-semibold">${doc.cabin || 'Cabin 01'}</span></td>
+                        <td class="p-4">
+                            <span class="text-xs bg-emerald-100 text-emerald-700 font-semibold px-2.5 py-1 rounded-full">
+                                <i class="fa-solid fa-circle text-[8px] mr-1"></i> Active
+                            </span>
+                        </td>
+                        <td class="p-4 text-center">
+                            <button onclick="removeDoctor('${doc.id}', '${doc.name}')" 
+                                class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition flex items-center justify-center mx-auto cursor-pointer" 
+                                title="Remove Doctor">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // --- REMOVE DOCTOR LOGIC ---
+        function removeDoctor(docId, docName) {
+            const currentActiveId = localStorage.getItem('doctor_id') || 'DOC-102';
+
+            if (confirm(`Are you sure you want to remove ${docName} (${docId}) from the system?`)) {
+                // 1. Remove from doctors_details list
+                let doctorsList = JSON.parse(localStorage.getItem('doctors_details') || '[]');
+                doctorsList = doctorsList.filter(d => d.id !== docId);
+                localStorage.setItem('doctors_details', JSON.stringify(doctorsList));
+
+                // 2. Remove from registered_users database
+                let registeredUsers = JSON.parse(localStorage.getItem('registered_users') || '{}');
+                if (registeredUsers[docId]) {
+                    delete registeredUsers[docId];
+                    localStorage.setItem('registered_users', JSON.stringify(registeredUsers));
+                }
+
+                // 3. If currently logged-in doctor is deleted, redirect to login
+                if (docId.toLowerCase() === currentActiveId.toLowerCase()) {
+                    alert("Your account was deleted. You will be redirected to the login page.");
+                    handleLogout();
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                // Re-render table
+                renderDoctorsTable(doctorsList, currentActiveId);
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('doctor_id');
+            localStorage.removeItem('doctor_name');
+            localStorage.removeItem('doctor_reg_no');
+            localStorage.removeItem('doctor_email');
+        }
+    </script>
+</body>
+</html>

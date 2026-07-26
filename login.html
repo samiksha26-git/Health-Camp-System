@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampCare Pro | Portal Access</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-slate-100 font-[Poppins] min-h-screen relative flex items-center justify-center p-5">
+
+    <!-- Auth Card -->
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-xl p-8 border border-gray-100">
+        <!-- Application Branding -->
+        <div class="text-center">
+            <div class="w-16 h-16 mx-auto rounded-full bg-teal-600 flex items-center justify-center text-white text-2xl shadow-md shadow-teal-600/20">
+                <i class="fa-solid fa-user-doctor"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-800 mt-4">CampCare Pro</h1>
+            <p class="text-gray-500 text-xs mt-1">Digital Health Camp Management System</p>
+            
+            <!-- Tab Controls -->
+            <div class="flex mt-6 bg-slate-100 p-1 rounded-xl">
+                <button id="tabLogin" type="button" onclick="toggleAuth('login')" class="w-1/2 py-2 text-sm font-semibold rounded-lg bg-white text-teal-600 shadow-sm transition-all duration-200 cursor-pointer">Sign In</button>
+                <button id="tabRegister" type="button" onclick="toggleAuth('register')" class="w-1/2 py-2 text-sm font-semibold rounded-lg text-gray-500 hover:text-gray-800 transition-all duration-200 cursor-pointer">Register</button>
+            </div>
+        </div>
+
+        <!-- Notification / Alert Message Box -->
+        <div id="alertBox" class="hidden mt-4 p-3 text-xs rounded-lg border transition-all duration-200"></div>
+
+        <!-- 1. Sign In Form -->
+        <form id="loginForm" class="mt-6 space-y-4" onsubmit="handleLogin(event)">
+            <div>
+                <label for="loginDoctorId" class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Doctor ID / User ID</label>
+                <input type="text" id="loginDoctorId" name="doctorId" autocomplete="username" placeholder="Enter Registered Doctor ID" required class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 outline-none transition bg-white text-gray-800">
+            </div>
+
+            <div>
+                <label for="loginPassword" class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Password</label>
+                <div class="relative">
+                    <input type="password" id="loginPassword" name="password" autocomplete="current-password" placeholder="Enter Secure Password" required class="w-full border border-gray-300 rounded-lg px-4 py-3 pr-12 text-sm focus:ring-2 focus:ring-teal-500 outline-none transition bg-white text-gray-800">
+                    <button type="button" onclick="toggleVisibility('loginPassword')" class="absolute right-4 top-3.5 text-gray-400 hover:text-gray-600 focus:outline-none cursor-pointer">
+                        <i class="fa-solid fa-eye pointer-events-none"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-1">
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                    <input type="checkbox" id="rememberMe" class="accent-teal-600 rounded">
+                    <span class="text-xs text-gray-500">Remember session</span>
+                </label>
+                <button type="button" onclick="ForgetPassword()" class="text-xs text-teal-600 font-medium hover:underline focus:outline-none cursor-pointer">Forgot Password?</button>
+            </div>
+
+            <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-lg font-semibold text-sm transition shadow-md shadow-teal-600/10 cursor-pointer">
+                Sign In
+            </button>
+        </form>
+
+        <!-- 2. Registration Form (Hidden Initially) -->
+        <form id="registerForm" class="mt-6 space-y-4 hidden" onsubmit="handleRegistration(event)">
+            <div>
+                <label for="regFullName" class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Full Legal Name</label>
+                <input type="text" id="regFullName" name="fullName" autocomplete="name" placeholder="Dr. Firstname Lastname" required class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 outline-none transition bg-white text-gray-800">
+            </div>
+
+            <div>
+                <label for="regCouncilNo" class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Medical Council Reg Number</label>
+                <input type="text" id="regCouncilNo" name="councilNumber" placeholder="e.g., MCI-12345" required class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 outline-none transition bg-white text-gray-800">
+                <p class="text-[10px] text-gray-400 mt-1">Instant digital registration verification.</p>
+            </div>
+
+            <div>
+                <label for="regEmail" class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Email Address</label>
+                <input type="email" id="regEmail" name="email" autocomplete="email" placeholder="name@hospital.com" required class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 outline-none transition bg-white text-gray-800">
+            </div>
+
+            <div>
+                <label for="regDoctorId" class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Choose Unique Doctor ID</label>
+                <input type="text" id="regDoctorId" name="newDoctorId" autocomplete="username" placeholder="Create a unique ID (e.g., DR_AMIT99)" required class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 outline-none transition bg-white text-gray-800">
+            </div>
+
+            <div>
+                <label for="regPassword" class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Create Password</label>
+                <div class="relative">
+                    <input type="password" id="regPassword" name="newPassword" autocomplete="new-password" placeholder="Minimum 8 characters" required class="w-full border border-gray-300 rounded-lg px-4 py-3 pr-12 text-sm focus:ring-2 focus:ring-teal-500 outline-none transition bg-white text-gray-800">
+                    <button type="button" onclick="toggleVisibility('regPassword')" class="absolute right-4 top-3.5 text-gray-400 hover:text-gray-600 focus:outline-none cursor-pointer">
+                        <i class="fa-solid fa-eye pointer-events-none"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-lg p-3 leading-relaxed">
+                <i class="fa-solid fa-circle-check mr-1"></i> <strong>Self-Registration:</strong> Creating an account registers your Doctor credentials locally. Only self-registered accounts can access the portal.
+            </div>
+
+            <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-lg font-semibold text-sm transition shadow-md shadow-teal-600/10 cursor-pointer">
+                Complete Registration
+            </button>
+        </form>
+    </div>
+
+    <!-- 3. Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+        <div class="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl border border-gray-100">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-gray-800 text-base">Reset Password</h3>
+                <button type="button" onclick="closeForgotPassword()" class="text-gray-400 hover:text-gray-600 text-lg cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <p class="text-xs text-gray-500 mb-4 leading-relaxed">Enter your registered Email Address or Doctor ID to receive a password reset link.</p>
+
+            <form onsubmit="handlePasswordReset(event)" class="space-y-4">
+                <div>
+                    <label for="resetIdentifier" class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">Doctor ID or Email</label>
+                    <input type="text" id="resetIdentifier" placeholder="e.g. DR_AMIT99 or doc@mail.com" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-teal-500 outline-none bg-white text-gray-800">
+                </div>
+
+                <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-lg font-semibold text-sm transition shadow-md cursor-pointer">
+                    Send Reset Link
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- UI Logic & Authentication Script -->
+    <script>
+        // Helper to display alert banner on UI
+        function showAlert(message, type = 'error') {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.classList.remove('hidden', 'bg-red-50', 'text-red-700', 'border-red-200', 'bg-emerald-50', 'text-emerald-700', 'border-emerald-200');
+            
+            if (type === 'error') {
+                alertBox.classList.add('bg-red-50', 'text-red-700', 'border-red-200');
+            } else {
+                alertBox.classList.add('bg-emerald-50', 'text-emerald-700', 'border-emerald-200');
+            }
+            alertBox.innerHTML = message;
+        }
+
+        function hideAlert() {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.classList.add('hidden');
+        }
+
+        // Toggle Sign In / Register Tabs cleanly
+        function toggleAuth(mode) {
+            hideAlert();
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabLogin = document.getElementById('tabLogin');
+            const tabRegister = document.getElementById('tabRegister');
+
+            if (mode === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                
+                tabLogin.classList.add('bg-white', 'text-teal-600', 'shadow-sm');
+                tabLogin.classList.remove('text-gray-500');
+
+                tabRegister.classList.remove('bg-white', 'text-teal-600', 'shadow-sm');
+                tabRegister.classList.add('text-gray-500');
+
+                setTimeout(() => { document.getElementById('loginDoctorId').focus(); }, 50);
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+
+                tabRegister.classList.add('bg-white', 'text-teal-600', 'shadow-sm');
+                tabRegister.classList.remove('text-gray-500');
+
+                tabLogin.classList.remove('bg-white', 'text-teal-600', 'shadow-sm');
+                tabLogin.classList.add('text-gray-500');
+
+                setTimeout(() => { document.getElementById('regFullName').focus(); }, 50);
+            }
+        }
+
+        // Password input visibility toggle
+        function toggleVisibility(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.type = el.type === 'password' ? 'text' : 'password';
+            }
+        }
+
+        // Forgot Password Modal
+        function ForgetPassword() {
+            document.getElementById('forgotPasswordModal').classList.remove('hidden');
+        }
+
+        function closeForgotPassword() {
+            document.getElementById('forgotPasswordModal').classList.add('hidden');
+        }
+
+        function handlePasswordReset(e) {
+            e.preventDefault();
+            const identifier = document.getElementById('resetIdentifier').value;
+            alert("A password reset link has been sent to: " + identifier);
+            closeForgotPassword();
+        }
+
+        // --- STEP 1: DOCTOR SELF-REGISTRATION PROCESS ---
+        function handleRegistration(e) {
+            e.preventDefault();
+            hideAlert();
+
+            const fullName = document.getElementById('regFullName').value.trim();
+            const regNo = document.getElementById('regCouncilNo').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const docId = document.getElementById('regDoctorId').value.trim();
+            const password = document.getElementById('regPassword').value;
+
+            if (password.length < 8) {
+                showAlert("Password must be at least 8 characters long.");
+                return;
+            }
+
+            // Retrieve registered doctors registry
+            let registeredUsers = JSON.parse(localStorage.getItem('registered_users') || '{}');
+
+            // Prevent registering duplicate Doctor IDs
+            if (registeredUsers[docId]) {
+                showAlert("This Doctor ID is already registered. Please choose a different Doctor ID or sign in.");
+                return;
+            }
+
+            // Save Doctor Credentials securely in local storage database
+            registeredUsers[docId] = {
+                fullName: fullName,
+                regNo: regNo,
+                email: email,
+                docId: docId,
+                password: password
+            };
+
+            localStorage.setItem('registered_users', JSON.stringify(registeredUsers));
+
+            // Inform doctor, prefill Sign In form, switch to Sign In tab
+            document.getElementById('registerForm').reset();
+            toggleAuth('login');
+            
+            document.getElementById('loginDoctorId').value = docId;
+            showAlert("Registration successful! You may now sign in using your credentials.", "success");
+        }
+
+        // --- STEP 2: STRICT DOCTOR SIGN IN PROCESS ---
+        function handleLogin(e) {
+            e.preventDefault();
+            hideAlert();
+
+            const doctorId = document.getElementById('loginDoctorId').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            // Retrieve registered doctors registry
+            let registeredUsers = JSON.parse(localStorage.getItem('registered_users') || '{}');
+
+            // Verification Check: Does this account exist and match credentials?
+            if (registeredUsers[doctorId] && registeredUsers[doctorId].password === password) {
+                const user = registeredUsers[doctorId];
+
+                // Create Active Session data for the Dashboard
+                localStorage.setItem('doctor_id', user.docId);
+                localStorage.setItem('doctor_name', user.fullName);
+                localStorage.setItem('doctor_reg_no', user.regNo);
+                localStorage.setItem('doctor_email', user.email);
+
+                showAlert("Access Granted! Redirecting to dashboard...", "success");
+
+                // Direct Redirection to dashboard.html
+                setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                }, 800);
+            } else {
+                // Deny entry to non-registered or invalid credentials
+                showAlert("Access Denied! Account not found or password incorrect. Please register first.");
+            }
+        }
+    </script>
+</body>
+</html>

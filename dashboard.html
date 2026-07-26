@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampCare Pro | Dashboard & Analytics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <!-- Chart.js Library for Analytics Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-50 font-[Poppins] min-h-screen flex">
+
+    <!-- Sidebar Menu -->
+    <aside class="w-64 bg-slate-800 text-slate-300 flex flex-col fixed h-full border-r border-slate-700">
+        <div class="p-5 border-b border-slate-700 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center text-slate-900 font-bold">
+                <i class="fa-solid fa-user-doctor"></i>
+            </div>
+            <span class="font-bold text-white tracking-wide">CampCare Pro</span>
+        </div>
+        
+        <nav class="flex-1 p-4 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 px-4 py-2.5 bg-slate-700 text-white rounded-lg transition font-medium">
+                <i class="fa-solid fa-chart-pie w-5"></i> Dashboard & Analytics
+            </a>
+            <a href="doctors-details.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-700/50 hover:text-white rounded-lg transition text-slate-400">
+                <i class="fa-solid fa-user-md w-5"></i> Doctors Details
+            </a>
+            <a href="add-patient.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-700/50 hover:text-white rounded-lg transition text-slate-400">
+                <i class="fa-solid fa-user-plus w-5"></i> Add Patient
+            </a>
+            <a href="patient-records.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-700/50 hover:text-white rounded-lg transition text-slate-400">
+                <i class="fa-solid fa-folder-open w-5"></i> Patient Records
+            </a>
+            <a href="medicine.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-700/50 hover:text-white rounded-lg transition text-slate-400">
+                <i class="fa-solid fa-pills w-5"></i> Medicine Stock
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-slate-700">
+            <a href="login.html" class="flex items-center gap-3 px-4 py-2.5 text-xs text-rose-400 hover:bg-rose-500/10 rounded-lg transition font-medium">
+                <i class="fa-solid fa-right-from-bracket"></i> Log Out
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="ml-64 flex-1 p-8">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8 bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+            <div>
+                <h1 class="text-xl font-bold text-gray-800">Camp Dashboard & Analytics</h1>
+                <p class="text-xs text-gray-500 mt-0.5">Overview of patient records, medicine stocks & illness breakdown</p>
+            </div>
+            <a href="add-patient.html" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-plus"></i> New Patient
+            </a>
+        </header>
+
+        <!-- KPI Metrics Summary Cards (Updated as per request) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Patient Records Card -->
+            <a href="patient-records.html" class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-5 hover:shadow-md transition">
+                <div class="w-14 h-14 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center text-2xl">
+                    <i class="fa-solid fa-folder-open"></i>
+                </div>
+                <div>
+                    <span class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Total Patient Records</span>
+                    <h3 class="text-2xl font-bold text-gray-800 mt-1" id="totalPatients">0</h3>
+                </div>
+            </a>
+
+            <!-- Medicine Stock Card -->
+            <a href="medicine.html" class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-5 hover:shadow-md transition">
+                <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl">
+                    <i class="fa-solid fa-pills"></i>
+                </div>
+                <div>
+                    <span class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Medicine Stock Items</span>
+                    <h3 class="text-2xl font-bold text-gray-800 mt-1" id="totalMedicines">0</h3>
+                </div>
+            </a>
+
+            <!-- Active Doctors Card -->
+            <a href="doctors-details.html" class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-5 hover:shadow-md transition">
+                <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl">
+                    <i class="fa-solid fa-user-md"></i>
+                </div>
+                <div>
+                    <span class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Active Camp Doctors</span>
+                    <h3 class="text-2xl font-bold text-gray-800 mt-1" id="totalDoctors">0</h3>
+                </div>
+            </a>
+        </div>
+
+        <!-- Disease / Symptom Based Analytics Chart -->
+        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm mb-8">
+            <h3 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-square-poll-vertical text-teal-600"></i> Illness & Symptoms Breakdown (Fever, Sugar, BP, Cough, Headache)
+            </h3>
+            <div class="h-72">
+                <canvas id="diseaseChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Demographics Breakdown -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Gender Breakdown -->
+            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                <h3 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie text-indigo-600"></i> Patient Gender Distribution
+                </h3>
+                <div class="h-60 flex justify-center">
+                    <canvas id="genderChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Blood Group Breakdown -->
+            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                <h3 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-droplet text-rose-500"></i> Patient Blood Group Distribution
+                </h3>
+                <div class="h-60 flex justify-center">
+                    <canvas id="bloodGroupChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', loadDashboardAnalytics);
+
+        function loadDashboardAnalytics() {
+            // Load Data from LocalStorage
+            const patientRecords = JSON.parse(localStorage.getItem('patient_records') || '[]');
+            const medicineStock = JSON.parse(localStorage.getItem('medicine_stock') || '[]');
+            const doctorsList = JSON.parse(localStorage.getItem('doctors_details') || '[]');
+
+            // Set Totals
+            document.getElementById('totalPatients').innerText = patientRecords.length;
+            document.getElementById('totalMedicines').innerText = medicineStock.length;
+            document.getElementById('totalDoctors').innerText = doctorsList.length > 0 ? doctorsList.length : '--';
+
+            // Category Counts for Symptoms / Illnesses
+            const symptomsCount = {
+                'Fever Patients': 0,
+                'Sugar / Diabetes': 0,
+                'BP / Hypertension': 0,
+                'Cough & Cold': 0,
+                'Headache Patients': 0,
+                'Others': 0
+            };
+
+            const genderCounts = { Male: 0, Female: 0, Other: 0 };
+            const bloodGroupCounts = {};
+
+            patientRecords.forEach(p => {
+                // Gender Count
+                if (genderCounts[p.gender] !== undefined) {
+                    genderCounts[p.gender]++;
+                }
+
+                // Blood Group Count
+                if (p.bloodGroup) {
+                    bloodGroupCounts[p.bloodGroup] = (bloodGroupCounts[p.bloodGroup] || 0) + 1;
+                }
+
+                // Diagnosis Keyword Matching
+                const diag = (p.diagnosis || '').toLowerCase();
+                let matched = false;
+
+                if (diag.includes('fever') || diag.includes('ताप')) {
+                    symptomsCount['Fever Patients']++;
+                    matched = true;
+                }
+                if (diag.includes('sugar') || diag.includes('diabetes') || diag.includes('साखर')) {
+                    symptomsCount['Sugar / Diabetes']++;
+                    matched = true;
+                }
+                if (diag.includes('bp') || diag.includes('pressure') || diag.includes('hypertension')) {
+                    symptomsCount['BP / Hypertension']++;
+                    matched = true;
+                }
+                if (diag.includes('cough') || diag.includes('cold') || diag.includes('सर्दी') || diag.includes('खोकला')) {
+                    symptomsCount['Cough & Cold']++;
+                    matched = true;
+                }
+                if (diag.includes('headache') || diag.includes('head') || diag.includes('डोकेदुखी')) {
+                    symptomsCount['Headache Patients']++;
+                    matched = true;
+                }
+
+                if (!matched) {
+                    symptomsCount['Others']++;
+                }
+            });
+
+            // Render Charts
+            renderDiseaseChart(symptomsCount);
+            renderGenderChart(genderCounts);
+            renderBloodGroupChart(bloodGroupCounts);
+        }
+
+        // 1. Illness & Symptom Category Bar Chart
+        function renderDiseaseChart(symptomsData) {
+            const ctx = document.getElementById('diseaseChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(symptomsData),
+                    datasets: [{
+                        label: 'Number of Patients',
+                        data: Object.values(symptomsData),
+                        backgroundColor: [
+                            '#ef4444', // Fever - Red
+                            '#f59e0b', // Sugar - Amber
+                            '#8b5cf6', // BP - Purple
+                            '#06b6d4', // Cough & Cold - Cyan
+                            '#10b981', // Headache - Emerald
+                            '#64748b'  // Others - Slate
+                        ],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 1 }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 2. Gender Chart
+        function renderGenderChart(data) {
+            const ctx = document.getElementById('genderChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Male', 'Female', 'Other'],
+                    datasets: [{
+                        data: [data.Male, data.Female, data.Other],
+                        backgroundColor: ['#0d9488', '#f43f5e', '#a855f7']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        // 3. Blood Group Chart
+        function renderBloodGroupChart(data) {
+            const ctx = document.getElementById('bloodGroupChart').getContext('2d');
+            const labels = Object.keys(data).length > 0 ? Object.keys(data) : ['A+', 'B+', 'O+', 'AB+'];
+            const values = Object.keys(data).length > 0 ? Object.values(data) : [0, 0, 0, 0];
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Patients',
+                        data: values,
+                        backgroundColor: '#0284c7',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
