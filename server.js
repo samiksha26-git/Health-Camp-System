@@ -4,7 +4,9 @@ const { open } = require('sqlite');
 const path = require('path');
 
 const app = express();
-const PORT = 5000;
+
+// Use Render's assigned port, or fall back to 5000 for local testing
+const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(express.static(__dirname));
@@ -67,7 +69,8 @@ app.delete('/api/doctors/:id', async (req, res) => {
 // Start Server & Connect Database
 initDatabase().then(() => {
     app.listen(PORT, () => {
-        console.log(`Server running securely on http://localhost:${PORT}`);
-        console.log(`Open: http://localhost:${PORT}/doctors-details.html`);
+        console.log(`Server running on port ${PORT}`);
     });
+}).catch(err => {
+    console.error("Failed to initialize database:", err);
 });
